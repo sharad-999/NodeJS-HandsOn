@@ -43,7 +43,7 @@ app.post("/signup", async (req, res) => {
           password
         });
         const registered = await registerUser.save();
-        res.status(201).render("home");
+        res.status(201).render("login");
       } else {
         console.log('Password not matching');
         res.render("signup");
@@ -53,8 +53,23 @@ app.post("/signup", async (req, res) => {
     console.log(error);
     res.status(400).send(error);
   }
-}
-);
+});
+app.post("/login", async (req, res) => {
+  try {
+    const password = req.body.password;
+    const email = req.body.email;
+    const user1 = await user.findOne({ email });
+    if(password===user1.password){
+      res.status(201).render("home");
+      console.log("Logged in sucessfully");
+    } else {
+      res.send("invalid login details");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+});
 // app.use(authRoutes);
 app.listen(3000,(req,res)=>{
   console.log('server is listening');
